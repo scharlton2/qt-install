@@ -35,6 +35,11 @@ jobs:
       - name: Check qmake
         run: which qmake
 
+      - name: Check cmake
+        run: |
+          which cmake
+          cmake --version
+
       - name: List files
         run: ls -lR ${{ github.workspace }}
         
@@ -57,6 +62,11 @@ jobs:
       - name: Check qmake
         run: which qmake
 
+      - name: Check cmake
+        run: |
+          which cmake
+          cmake --version
+
       - name: List files
         run: ls -lR ${{ github.workspace }}
 
@@ -78,6 +88,11 @@ jobs:
 
       - name: Check qmake
         run: Get-Command qmake
+
+      - name: Check cmake
+        run: |
+          Get-Command cmake
+          cmake --version
 
       - name: List files
         run: Get-ChildItem -Recurse C:/Qt
