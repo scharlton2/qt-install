@@ -33,7 +33,10 @@ jobs:
           cache-key-prefix: ${{ runner.os }}-install-qt-action
 
       - name: Check qmake
-        run: which qmake        
+        run: which qmake
+
+      - name: List files
+        run: ls -lR ${{ github.workspace }}
         
   install-qt-ubuntu:
   
@@ -54,6 +57,9 @@ jobs:
       - name: Check qmake
         run: which qmake
 
+      - name: List files
+        run: ls -lR ${{ github.workspace }}
+
   install-qt-windows:
   
     runs-on: windows-2019
@@ -73,4 +79,5 @@ jobs:
       - name: Check qmake
         run: Get-Command qmake
 
-
+      - name: List files
+        run: Get-ChildItem -Recurse C:/Qt
