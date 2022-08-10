@@ -26,11 +26,11 @@ jobs:
         with:
           version: '5.15.2'
           host: 'mac'
-          target: 'deskop'
+          target: 'desktop'
           arch: 'clang_64'
           dir: ${{ github.workspace }}
           cache: true
-          cache-key-prefix: ${{runner.os}}-install-qt-action
+          cache-key-prefix: ${{ runner.os }}-install-qt-action
 
       - name: Check qmake
         run: which qmake        
@@ -45,11 +45,11 @@ jobs:
         with:
           version: '5.15.2'
           host: 'linux'
-          target: 'deskop'
+          target: 'desktop'
           arch: 'gcc_64'
           dir: ${{ github.workspace }}
           cache: true
-          cache-key-prefix: ${{runner.os}}-install-qt-action
+          cache-key-prefix: ${{ runner.os }}-install-qt-action
 
       - name: Check qmake
         run: which qmake
@@ -64,11 +64,11 @@ jobs:
         with:
           version: '5.15.2'
           host: 'windows'
-          target: 'deskop'
+          target: 'desktop'
           arch: 'win64_msvc2019_64'
           dir: 'C:/'
           cache: true
-          cache-key-prefix: ${{runner.os}}-install-qt-action
+          cache-key-prefix: ${{ runner.os }}-install-qt-action
 
       - name: Check qmake
         run: Get-Command qmake
