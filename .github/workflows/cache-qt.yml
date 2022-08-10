@@ -54,7 +54,7 @@ jobs:
 
       - name: List files
         shell: bash
-        run: ls -lR ${{ env.RUNNER_WORKSPACE }}
+        run: ls -lR ${RUNNER_WORKSPACE}
         
   install-qt-ubuntu:
   
@@ -90,7 +90,7 @@ jobs:
 
       - name: List files
         shell: bash
-        run: ls -lR ${{ env.RUNNER_WORKSPACE }}
+        run: ls -lR ${RUNNER_WORKSPACE}
 
   install-qt-windows:
     
@@ -126,4 +126,4 @@ jobs:
 
       - name: List files
         shell: bash
-        run: ls -lR ${{ env.RUNNER_WORKSPACE }}
+        run: ls -lR ${RUNNER_WORKSPACE}
