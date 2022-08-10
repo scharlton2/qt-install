@@ -13,6 +13,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  QT_VER: 5.15.2
+  QT_TARGET: desktop
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
@@ -24,24 +28,29 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3 
         with:
-          version: '5.15.2'
+          version: ${{ env.QT_VER }}
           host: 'mac'
-          target: 'desktop'
+          target: ${{ env.QT_TARGET }}
           arch: 'clang_64'
-          dir: ${{ github.workspace }}
+          dir: ${{ env.RUNNER_WORKSPACE }}
           cache: true
-          cache-key-prefix: ${{ runner.os }}-install-qt-action
+          cache-key-prefix: install-qt-action
 
       - name: Check qmake
-        run: which qmake
+        shell: bash
+        run: |
+          which qmake
+          qmake --version
 
       - name: Check cmake
+        shell: bash
         run: |
           which cmake
           cmake --version
 
       - name: List files
-        run: ls -lR ${{ github.workspace }}
+        shell: bash
+        run: ls -lR ${{ env.RUNNER_WORKSPACE }}
         
   install-qt-ubuntu:
   
@@ -51,26 +60,34 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3 
         with:
-          version: '5.15.2'
+          version: ${{ env.QT_VER }}
           host: 'linux'
-          target: 'desktop'
+          target: ${{ env.QT_TARGET }}
           arch: 'gcc_64'
-          dir: ${{ github.workspace }}
+          dir: ${{ env.RUNNER_WORKSPACE }}
           cache: true
-          cache-key-prefix: ${{ runner.os }}-install-qt-action
+          cache-key-prefix: install-qt-action
 
       - name: Check qmake
-        run: which qmake
+        shell: bash
+        run: |
+          which qmake
+          qmake --version
 
       - name: Check cmake
+        shell: bash
         run: |
           which cmake
           cmake --version
 
       - name: List files
-        run: ls -lR ${{ github.workspace }}
+        shell: bash
+        run: ls -lR ${{ env.RUNNER_WORKSPACE }}
 
   install-qt-windows:
+    
+    env:
+      QT_ARCH: win64_msvc2019_64
   
     runs-on: windows-2019
 
@@ -78,21 +95,26 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3 
         with:
-          version: '5.15.2'
+          version: ${{ env.QT_VER }}
           host: 'windows'
-          target: 'desktop'
-          arch: 'win64_msvc2019_64'
-          dir: 'C:/'
+          target: ${{ env.QT_TARGET }}
+          arch: ${{ env.QT_ARCH }}
+          dir: ${{ env.RUNNER_WORKSPACE }}
           cache: true
-          cache-key-prefix: ${{ runner.os }}-install-qt-action
+          cache-key-prefix: install-qt-action
 
       - name: Check qmake
-        run: Get-Command qmake
+        shell: bash
+        run: |
+          which qmake
+          qmake --version
 
       - name: Check cmake
+        shell: bash
         run: |
-          Get-Command cmake
+          which cmake
           cmake --version
 
       - name: List files
-        run: Get-ChildItem -Recurse C:/Qt
+        shell: bash
+        run: ls -lR ${{ env.RUNNER_WORKSPACE }}
