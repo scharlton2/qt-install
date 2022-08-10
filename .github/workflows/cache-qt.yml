@@ -24,14 +24,18 @@ jobs:
   
     runs-on: macos-11
 
+    env:
+      QT_ARCH: clang_64
+      QT_HOST: mac
+
     steps:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3 
         with:
           version: ${{ env.QT_VER }}
-          host: 'mac'
+          host: ${{ env.QT_HOST }}
           target: ${{ env.QT_TARGET }}
-          arch: 'clang_64'
+          arch: ${{ env.QT_ARCH }}
           dir: ${{ env.RUNNER_WORKSPACE }}
           cache: true
           cache-key-prefix: install-qt-action
@@ -56,14 +60,18 @@ jobs:
   
     runs-on: ubuntu-20.04
 
+    env:
+      QT_ARCH: gcc_64
+      QT_HOST: linux
+
     steps:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3 
         with:
           version: ${{ env.QT_VER }}
-          host: 'linux'
+          host: ${{ env.QT_HOST }}
           target: ${{ env.QT_TARGET }}
-          arch: 'gcc_64'
+          arch: ${{ env.QT_ARCH }}
           dir: ${{ env.RUNNER_WORKSPACE }}
           cache: true
           cache-key-prefix: install-qt-action
@@ -86,17 +94,18 @@ jobs:
 
   install-qt-windows:
     
+    runs-on: windows-2019
+
     env:
       QT_ARCH: win64_msvc2019_64
-  
-    runs-on: windows-2019
+      QT_HOST: windows
 
     steps:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3 
         with:
           version: ${{ env.QT_VER }}
-          host: 'windows'
+          host: ${{ env.QT_HOST }}
           target: ${{ env.QT_TARGET }}
           arch: ${{ env.QT_ARCH }}
           dir: ${{ env.RUNNER_WORKSPACE }}
