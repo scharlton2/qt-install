@@ -39,6 +39,7 @@ jobs:
           dir: ${{ env.RUNNER_WORKSPACE }}
           cache: true
           cache-key-prefix: install-qt-action
+          tools: tools_ninja
 
       - name: Check qmake
         shell: bash
@@ -52,6 +53,7 @@ jobs:
           which cmake
           cmake --version
           cmake --help
+          ninja --help
 
       - name: List files
         shell: bash
@@ -76,6 +78,7 @@ jobs:
           dir: ${{ env.RUNNER_WORKSPACE }}
           cache: true
           cache-key-prefix: install-qt-action
+          tools: tools_ninja
 
       - name: Check qmake
         shell: bash
@@ -89,6 +92,7 @@ jobs:
           which cmake
           cmake --version
           cmake --help
+          ninja --help
 
       - name: List files
         shell: bash
@@ -113,6 +117,7 @@ jobs:
           dir: ${{ env.RUNNER_WORKSPACE }}
           cache: true
           cache-key-prefix: install-qt-action
+          tools: tools_ninja
 
       - name: Check qmake
         shell: bash
@@ -126,6 +131,7 @@ jobs:
           which cmake
           cmake --version
           cmake --help
+          ninja --help
 
       - name: List files
         shell: bash
