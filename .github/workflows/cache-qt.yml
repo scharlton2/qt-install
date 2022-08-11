@@ -41,6 +41,11 @@ jobs:
           cache-key-prefix: install-qt-action
           tools: tools_ninja
 
+      - name: Add path
+        shell: bash
+        run: |
+          echo "${IQTA_TOOLS}/Ninja" >> $GITHUB_PATH
+
       - name: Check qmake
         shell: bash
         run: |
@@ -53,7 +58,7 @@ jobs:
           which cmake
           cmake --version
           cmake --help
-          #ninja --help
+          ninja --help
 
       - name: List files
         shell: bash
@@ -80,6 +85,11 @@ jobs:
           cache-key-prefix: install-qt-action
           tools: tools_ninja
 
+      - name: Add path
+        shell: bash
+        run: |
+          echo "${IQTA_TOOLS}/Ninja" >> $GITHUB_PATH
+
       - name: Check qmake
         shell: bash
         run: |
@@ -92,7 +102,7 @@ jobs:
           which cmake
           cmake --version
           cmake --help
-          #ninja --help
+          ninja --help
 
       - name: List files
         shell: bash
@@ -119,6 +129,11 @@ jobs:
           cache-key-prefix: install-qt-action
           tools: tools_ninja
 
+      - name: Add path
+        shell: bash
+        run: |
+          echo "${IQTA_TOOLS}/Ninja" >> $GITHUB_PATH
+
       - name: Check qmake
         shell: bash
         run: |
@@ -131,7 +146,7 @@ jobs:
           which cmake
           cmake --version
           cmake --help
-          #ninja --help
+          ninja --help
 
       - name: List files
         shell: bash
