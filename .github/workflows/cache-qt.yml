@@ -58,6 +58,17 @@ jobs:
           which cmake
           cmake --version
           cmake --help
+
+      - name: Check path
+        shell: bash
+        run: |
+          echo $PATH
+
+      - name: Check ninja
+        shell: bash
+        run: |
+          which ninja
+          ninja --version
           ninja --help
 
       - name: List files
@@ -102,6 +113,17 @@ jobs:
           which cmake
           cmake --version
           cmake --help
+
+      - name: Check path
+        shell: bash
+        run: |
+          echo $PATH
+
+      - name: Check ninja
+        shell: bash
+        run: |
+          which ninja
+          ninja --version
           ninja --help
 
       - name: List files
@@ -146,6 +168,17 @@ jobs:
           which cmake
           cmake --version
           cmake --help
+
+      - name: Check path
+        shell: bash
+        run: |
+          echo $PATH
+
+      - name: Check ninja
+        shell: bash
+        run: |
+          which ninja
+          ninja --version
           ninja --help
 
       - name: List files
