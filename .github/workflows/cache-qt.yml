@@ -121,8 +121,6 @@ jobs:
           qmake
           make
 
-
-
       - name: Build test2 with cmake
         run: |
           cd test2
@@ -132,6 +130,36 @@ jobs:
           cmake --build . --config Debug
           cmake --build . --config Release
 
+      - name: Check dependencies
+        shell: cmake -P {0}
+        run: |
+          if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
+            execute_process(
+              COMMAND         ldd ./test2/_ninja/Release/mainwindow
+              RESULT_VARIABLE result
+            )
+            if (NOT result EQUAL 0)
+              message(FATAL_ERROR "ldd failed")
+            endif()
+          endif()
+          if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Darwin")
+            execute_process(
+              COMMAND         otool -L ./test2/_ninja/Release/mainwindow
+              RESULT_VARIABLE result
+            )
+            if (NOT result EQUAL 0)
+              message(FATAL_ERROR "otool failed")
+            endif()
+          endif()
+          if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
+            execute_process(
+              COMMAND         dumpbin /imports ./test2/_ninja/Release/mainwindow.exe
+              RESULT_VARIABLE result
+            )
+            if (NOT result EQUAL 0)
+              message(FATAL_ERROR "dumpbin failed")
+            endif()
+          endif()
 
 
 # # This is a basic workflow to help you get started with Actions
