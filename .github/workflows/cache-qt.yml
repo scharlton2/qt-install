@@ -124,8 +124,8 @@ jobs:
       - name: Build test2 with cmake
         run: |
           cd test2
-          mkdir _cmake
-          cd _cmake
+          mkdir _ninja
+          cd _ninja
           cmake -G "Ninja Multi-Config" ..
           cmake --build . --config Debug
           cmake --build . --config Release
