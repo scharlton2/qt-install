@@ -80,6 +80,26 @@ jobs:
 
 
 
+      - name: cl.exe shouldn't be found
+        if: runner.os == 'Windows'
+        run: |
+          $(Get-Command cl -ErrorAction SilentlyContinue) -and $(throw "cl.exe was found!")
+
+      - name: Set up Visual Studio shell
+        if: runner.os == 'Windows'
+        uses: egor-tensin/vs-shell
+        with:
+          arch: x64
+
+      - name: cl.exe should be found now
+        if: runner.os == 'Windows'
+        run: |
+          $(Get-Command cl -ErrorAction SilentlyContinue) -or $(throw "cl.exe wasn't found!")
+          echo _MSC_VER > test.c
+          cl /nologo /EP test.c
+
+
+
 
 
 # # This is a basic workflow to help you get started with Actions
