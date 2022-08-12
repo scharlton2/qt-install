@@ -1,0 +1,126 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+      "major": 3,
+      "minor": 18,
+      "patch": 0
+    },
+    "configurePresets": [
+      {
+        "name": "default",
+        "hidden": true,
+        "cacheVariables": {
+          "BUILD_TESTING": "OFF",
+          "CMAKE_DEBUG_POSTFIX": "d",
+          "VTK_GROUP_ENABLE_Qt" : "YES",
+          "VTK_QT_VERSION": "5",
+          "VTK_MODULE_ENABLE_VTK_RenderingQt": "YES",
+          "VTK_MODULE_ENABLE_VTK_ViewsQt": "YES",
+          "VTK_MODULE_ENABLE_VTK_GUISupportQt": "YES",
+          "VTK_MODULE_ENABLE_VTK_GUISupportQtQuick": "YES",
+          "VTK_MODULE_ENABLE_VTK_GUISupportQtSQL":"YES"
+        },
+        "generator": "Ninja Multi-Config",
+        "environment": {
+          // "PATH": "$env{RUNNER_WORKSPACE}/Qt/Tools/Ninja:$penv{PATH}",
+          "Qt5_VERSION": "5.15.2",
+          "Qt5_DIR": "$env{RUNNER_WORKSPACE}/Qt/$env{Qt5_VERSION}/${presetName}/lib/cmake/Qt5",
+          //"Qt5_DIR": "C:/Qt/$env{Qt5_VERSION}/${presetName}/lib/cmake/Qt5",
+          "VTK_VERSION": "9.1.0",
+          "VTK_INSTALL_PREFIX": "$env{RUNNER_WORKSPACE}"
+        }
+      },
+      {
+        "name": "msvc2019_64",
+        "inherits": "default",
+        "displayName": "vtk-9.1.0 with VTK_MODULE_ENABLE_VTK_GUISupportQt=YES using msvc2019_64",
+        "binaryDir": "$env{VTK_INSTALL_PREFIX}/qt5-vtk-$env{VTK_VERSION}-msvc2019_64-build",
+        "cacheVariables": {
+          "CMAKE_INSTALL_PREFIX": "$env{VTK_INSTALL_PREFIX}/qt5-vtk-$env{VTK_VERSION}-${presetName}"
+        },
+        "condition": {
+          "type": "equals",
+          "lhs": "${hostSystemName}",
+          "rhs": "Windows"
+        },
+        "vendor": {
+          "usgs.gov/modflow": {
+            "Name": "U.S. Geological Survey",
+            "Notes": "This file should be placed in the root directory of VTK-9.1.0",
+            "Configure": "cmake --preset ${presetName}",
+            "Build-debug": "cmake --build --preset ${presetName} --config Debug",
+            "Build-release": "cmake --build --preset ${presetName} --config Release",
+            "Install-debug": "cmake --install ${CMAKE_INSTALL_PREFIX} --config Debug",
+            "Install-release": "cmake --install ${CMAKE_INSTALL_PREFIX} --config Release"
+          }
+        }
+      },
+      {
+        "name": "gcc_64",
+        "inherits": "default",
+        "displayName": "vtk-9.1.0 with VTK_MODULE_ENABLE_VTK_GUISupportQt=YES using gcc_64",
+        "binaryDir": "$env{VTK_INSTALL_PREFIX}/qt5-vtk-$env{VTK_VERSION}-gcc_64-build",
+        "cacheVariables": {
+          "CMAKE_INSTALL_PREFIX": "$env{VTK_INSTALL_PREFIX}/qt5-vtk-$env{VTK_VERSION}-${presetName}"
+        },
+        "condition": {
+          "type": "equals",
+          "lhs": "${hostSystemName}",
+          "rhs": "Linux"
+        },  
+        "vendor": {
+          "usgs.gov/modflow": {
+            "Name": "U.S. Geological Survey",
+            "Notes": "This file should be placed in the root directory of VTK-9.1.0",
+            "Configure": "cmake --preset ${presetName}",
+            "Build-debug": "cmake --build --preset ${presetName} --config Debug",
+            "Build-release": "cmake --build --preset ${presetName} --config Release",
+            "Install-debug": "cmake --install ${CMAKE_INSTALL_PREFIX} --config Debug",
+            "Install-release": "cmake --install ${CMAKE_INSTALL_PREFIX} --config Release"
+          }
+        }
+      },
+      {
+        "name": "clang_64",
+        "inherits": "default",
+        "displayName": "vtk-9.1.0 with VTK_MODULE_ENABLE_VTK_GUISupportQt=YES using clang_64",
+        "binaryDir": "$env{VTK_INSTALL_PREFIX}/qt5-vtk-$env{VTK_VERSION}-clang_64-build",
+        "cacheVariables": {
+          "CMAKE_INSTALL_PREFIX": "$env{VTK_INSTALL_PREFIX}/qt5-vtk-$env{VTK_VERSION}-${presetName}"
+        },
+        "condition": {
+          "type": "equals",
+          "lhs": "${hostSystemName}",
+          "rhs": "Darwin"
+        },  
+        "vendor": {
+          "usgs.gov/modflow": {
+            "Name": "U.S. Geological Survey",
+            "Notes": "This file should be placed in the root directory of VTK-9.1.0",
+            "Configure": "cmake --preset ${presetName}",
+            "Build-debug": "cmake --build --preset ${presetName} --config Debug",
+            "Build-release": "cmake --build --preset ${presetName} --config Release",
+            "Install-debug": "cmake --install ${CMAKE_INSTALL_PREFIX} --config Debug",
+            "Install-release": "cmake --install ${CMAKE_INSTALL_PREFIX} --config Release"
+          }
+        }
+      }
+    ],
+    "buildPresets": [
+      {
+        "name": "msvc2019_64",
+        "configurePreset": "msvc2019_64"
+      },
+      {
+        "name": "gcc_64",
+        "configurePreset": "gcc_64"
+      },
+      {
+        "name": "clang_64",
+        "configurePreset": "clang_64"
+      }
+    ],
+    "vendor": {
+      "Note": ""
+    }
+  }

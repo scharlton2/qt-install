@@ -1,50 +1,58 @@
-# This is a basic workflow to help you get started with Actions
+name: cache-qt5-vtk
 
-name: install-qt
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 env:
-  QT_VER: 5.15.2
-  QT_TARGET: desktop
+  AQT_TARGET: desktop
+  AQT_VER: 5.15.2
+  VTK_VER: 9.1.0
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-
-  install-qt-macos:
-  
-    runs-on: macos-11
-
-    env:
-      QT_ARCH: clang_64
-      QT_HOST: mac
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "install-qt-windows-2019",
+            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
+            os: windows-2019,
+            aqt_host: windows,
+            aqt_arch: win64_msvc2019_64
+          }
+        - {
+            name: "install-qt-ubuntu-20.04",
+            os: ubuntu-20.04,
+            aqt_host: linux,
+            aqt_arch: gcc_64
+          }
+        - {
+            name: "install-qt-macos-11",
+            os: macos-11,
+            aqt_host: mac,
+            aqt_arch: clang_64
+          }
 
     steps:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3 
         with:
-          version: ${{ env.QT_VER }}
-          host: ${{ env.QT_HOST }}
-          target: ${{ env.QT_TARGET }}
-          arch: ${{ env.QT_ARCH }}
+          version: ${{ env.AQT_VER }}
+          host: ${{ matrix.config.aqt_host }}
+          target: ${{ env.AQT_TARGET }}
+          arch: ${{ matrix.config.aqt_arch }}
           dir: ${{ env.RUNNER_WORKSPACE }}
           cache: true
           cache-key-prefix: install-qt-action
           tools: tools_ninja
-
-      - name: Add path
-        shell: bash
-        run: |
-          echo "${IQTA_TOOLS}/Ninja" >> $GITHUB_PATH
 
       - name: Check qmake
         shell: bash
@@ -52,132 +60,189 @@ jobs:
           which qmake
           qmake --version
 
-      - name: Check cmake
-        shell: bash
-        run: |
-          which cmake
-          cmake --version
-          cmake --help
 
-      - name: Check path
-        shell: bash
-        run: |
-          echo $PATH
 
-      - name: Check ninja
-        shell: bash
-        run: |
-          which ninja
-          ninja --version
 
-      - name: List files
-        shell: bash
-        run: ls -lR ${RUNNER_WORKSPACE}
+# # This is a basic workflow to help you get started with Actions
+
+# name: install-qt
+
+# # Controls when the workflow will run
+# on:
+#   # Triggers the workflow on push or pull request events but only for the "main" branch
+#   push:
+#     branches: [ "main" ]
+#   pull_request:
+#     branches: [ "main" ]
+
+#   # Allows you to run this workflow manually from the Actions tab
+#   workflow_dispatch:
+
+# env:
+#   QT_VER: 5.15.2
+#   QT_TARGET: desktop
+
+# # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# jobs:
+
+#   install-qt-macos:
+  
+#     runs-on: macos-11
+
+#     env:
+#       QT_ARCH: clang_64
+#       QT_HOST: mac
+
+#     steps:
+#       - name: Install Qt
+#         uses: jurplel/install-qt-action@v3 
+#         with:
+#           version: ${{ env.QT_VER }}
+#           host: ${{ env.QT_HOST }}
+#           target: ${{ env.QT_TARGET }}
+#           arch: ${{ env.QT_ARCH }}
+#           dir: ${{ env.RUNNER_WORKSPACE }}
+#           cache: true
+#           cache-key-prefix: install-qt-action
+#           tools: tools_ninja
+
+#       - name: Add path
+#         shell: bash
+#         run: |
+#           echo "${IQTA_TOOLS}/Ninja" >> $GITHUB_PATH
+
+#       - name: Check qmake
+#         shell: bash
+#         run: |
+#           which qmake
+#           qmake --version
+
+#       - name: Check cmake
+#         shell: bash
+#         run: |
+#           which cmake
+#           cmake --version
+#           cmake --help
+
+#       - name: Check path
+#         shell: bash
+#         run: |
+#           echo $PATH
+
+#       - name: Check ninja
+#         shell: bash
+#         run: |
+#           which ninja
+#           ninja --version
+
+#       - name: List files
+#         shell: bash
+#         run: ls -lR ${RUNNER_WORKSPACE}
         
-  install-qt-ubuntu:
+#   install-qt-ubuntu:
   
-    runs-on: ubuntu-20.04
+#     runs-on: ubuntu-20.04
 
-    env:
-      QT_ARCH: gcc_64
-      QT_HOST: linux
+#     env:
+#       QT_ARCH: gcc_64
+#       QT_HOST: linux
 
-    steps:
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v3 
-        with:
-          version: ${{ env.QT_VER }}
-          host: ${{ env.QT_HOST }}
-          target: ${{ env.QT_TARGET }}
-          arch: ${{ env.QT_ARCH }}
-          dir: ${{ env.RUNNER_WORKSPACE }}
-          cache: true
-          cache-key-prefix: install-qt-action
-          tools: tools_ninja
+#     steps:
+#       - name: Install Qt
+#         uses: jurplel/install-qt-action@v3 
+#         with:
+#           version: ${{ env.QT_VER }}
+#           host: ${{ env.QT_HOST }}
+#           target: ${{ env.QT_TARGET }}
+#           arch: ${{ env.QT_ARCH }}
+#           dir: ${{ env.RUNNER_WORKSPACE }}
+#           cache: true
+#           cache-key-prefix: install-qt-action
+#           tools: tools_ninja
 
-      - name: Add path
-        shell: bash
-        run: |
-          echo "${IQTA_TOOLS}/Ninja" >> $GITHUB_PATH
+#       - name: Add path
+#         shell: bash
+#         run: |
+#           echo "${IQTA_TOOLS}/Ninja" >> $GITHUB_PATH
 
-      - name: Check qmake
-        shell: bash
-        run: |
-          which qmake
-          qmake --version
+#       - name: Check qmake
+#         shell: bash
+#         run: |
+#           which qmake
+#           qmake --version
 
-      - name: Check cmake
-        shell: bash
-        run: |
-          which cmake
-          cmake --version
-          cmake --help
+#       - name: Check cmake
+#         shell: bash
+#         run: |
+#           which cmake
+#           cmake --version
+#           cmake --help
 
-      - name: Check path
-        shell: bash
-        run: |
-          echo $PATH
+#       - name: Check path
+#         shell: bash
+#         run: |
+#           echo $PATH
 
-      - name: Check ninja
-        shell: bash
-        run: |
-          which ninja
-          ninja --version
+#       - name: Check ninja
+#         shell: bash
+#         run: |
+#           which ninja
+#           ninja --version
 
-      - name: List files
-        shell: bash
-        run: ls -lR ${RUNNER_WORKSPACE}
+#       - name: List files
+#         shell: bash
+#         run: ls -lR ${RUNNER_WORKSPACE}
 
-  install-qt-windows:
+#   install-qt-windows:
     
-    runs-on: windows-2019
+#     runs-on: windows-2019
 
-    env:
-      QT_ARCH: win64_msvc2019_64
-      QT_HOST: windows
+#     env:
+#       QT_ARCH: win64_msvc2019_64
+#       QT_HOST: windows
 
-    steps:
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v3 
-        with:
-          version: ${{ env.QT_VER }}
-          host: ${{ env.QT_HOST }}
-          target: ${{ env.QT_TARGET }}
-          arch: ${{ env.QT_ARCH }}
-          dir: ${{ env.RUNNER_WORKSPACE }}
-          cache: true
-          cache-key-prefix: install-qt-action
-          tools: tools_ninja
+#     steps:
+#       - name: Install Qt
+#         uses: jurplel/install-qt-action@v3 
+#         with:
+#           version: ${{ env.QT_VER }}
+#           host: ${{ env.QT_HOST }}
+#           target: ${{ env.QT_TARGET }}
+#           arch: ${{ env.QT_ARCH }}
+#           dir: ${{ env.RUNNER_WORKSPACE }}
+#           cache: true
+#           cache-key-prefix: install-qt-action
+#           tools: tools_ninja
 
-      - name: Add path
-        shell: bash
-        run: |
-          echo "${IQTA_TOOLS}/Ninja" >> $GITHUB_PATH
+#       - name: Add path
+#         shell: bash
+#         run: |
+#           echo "${IQTA_TOOLS}/Ninja" >> $GITHUB_PATH
 
-      - name: Check qmake
-        shell: bash
-        run: |
-          which qmake
-          qmake --version
+#       - name: Check qmake
+#         shell: bash
+#         run: |
+#           which qmake
+#           qmake --version
 
-      - name: Check cmake
-        shell: bash
-        run: |
-          which cmake
-          cmake --version
-          cmake --help
+#       - name: Check cmake
+#         shell: bash
+#         run: |
+#           which cmake
+#           cmake --version
+#           cmake --help
 
-      - name: Check path
-        shell: bash
-        run: |
-          echo $PATH
+#       - name: Check path
+#         shell: bash
+#         run: |
+#           echo $PATH
 
-      - name: Check ninja
-        shell: bash
-        run: |
-          which ninja
-          ninja --version
+#       - name: Check ninja
+#         shell: bash
+#         run: |
+#           which ninja
+#           ninja --version
 
-      - name: List files
-        shell: bash
-        run: ls -lR ${RUNNER_WORKSPACE}
+#       - name: List files
+#         shell: bash
+#         run: ls -lR ${RUNNER_WORKSPACE}
