@@ -104,6 +104,13 @@ jobs:
           $(Get-Command MSBuild -ErrorAction SilentlyContinue) -or $(throw "MSBuild wasn't found!")
           MSBuild --version
 
+      - name: Build test1 with vs2019
+        if: runner.os == 'Windows'
+        run: |
+          Set-Location .\test1\
+          qmake -tp vc
+          msbuild /nologo /p:Configuration=Debug /p:platform=x64 mainwindow.vcxproj
+          msbuild /nologo /p:Configuration=Release /p:platform=x64 mainwindow.vcxproj
 
 
 
