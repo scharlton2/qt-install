@@ -122,6 +122,18 @@ jobs:
           make
 
 
+
+      - name: Build test2 with cmake
+        run: |
+          cd test2
+          mkdir _cmake
+          cd _cmake
+          cmake -G "Ninja Multi-Config" ..
+          cmake --build . --config Debug
+          cmake --build . --config Release
+
+
+
 # # This is a basic workflow to help you get started with Actions
 
 # name: install-qt
