@@ -22,11 +22,10 @@ jobs:
       matrix:
         config:
         - {
-            name: "install-qt-windows-2019",
-            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-            os: windows-2019,
-            aqt_host: windows,
-            aqt_arch: win64_msvc2019_64
+            name: "install-qt-macos-11",
+            os: macos-11,
+            aqt_host: mac,
+            aqt_arch: clang_64
           }
         - {
             name: "install-qt-ubuntu-20.04",
@@ -35,10 +34,11 @@ jobs:
             aqt_arch: gcc_64
           }
         - {
-            name: "install-qt-macos-11",
-            os: macos-11,
-            aqt_host: mac,
-            aqt_arch: clang_64
+            name: "install-qt-windows-2019",
+            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
+            os: windows-2019,
+            aqt_host: windows,
+            aqt_arch: win64_msvc2019_64
           }
 
     steps:
@@ -54,11 +54,30 @@ jobs:
           cache-key-prefix: install-qt-action
           tools: tools_ninja
 
+      - name: Add ninja path
+        shell: bash
+        run: |
+          echo "${IQTA_TOOLS}/Ninja" >> $GITHUB_PATH
+
       - name: Check qmake
         shell: bash
         run: |
           which qmake
           qmake --version
+
+      - name: Check ninja
+        shell: bash
+        run: |
+          which ninja
+          ninja --version
+
+      - name: Check cmake
+        shell: bash
+        run: |
+          which cmake
+          cmake --version
+          cmake --help
+
 
 
 

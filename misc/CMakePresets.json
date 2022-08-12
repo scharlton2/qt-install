@@ -25,7 +25,6 @@
           // "PATH": "$env{RUNNER_WORKSPACE}/Qt/Tools/Ninja:$penv{PATH}",
           "Qt5_VERSION": "5.15.2",
           "Qt5_DIR": "$env{RUNNER_WORKSPACE}/Qt/$env{Qt5_VERSION}/${presetName}/lib/cmake/Qt5",
-          //"Qt5_DIR": "C:/Qt/$env{Qt5_VERSION}/${presetName}/lib/cmake/Qt5",
           "VTK_VERSION": "9.1.0",
           "VTK_INSTALL_PREFIX": "$env{RUNNER_WORKSPACE}"
         }
