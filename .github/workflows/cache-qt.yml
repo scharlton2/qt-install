@@ -87,7 +87,7 @@ jobs:
 
       - name: Set up Visual Studio shell
         if: runner.os == 'Windows'
-        uses: egor-tensin/vs-shell
+        uses: egor-tensin/vs-shell@v2
         with:
           arch: x64
 
@@ -98,6 +98,11 @@ jobs:
           echo _MSC_VER > test.c
           cl /nologo /EP test.c
 
+      - name: MSBuild.exe should be found now
+        if: runner.os == 'Windows'
+        run: |
+          $(Get-Command MSBuild -ErrorAction SilentlyContinue) -or $(throw "MSBuild wasn't found!")
+          MSBuild --version
 
 
 
