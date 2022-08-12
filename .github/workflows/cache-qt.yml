@@ -114,6 +114,12 @@ jobs:
           msbuild /nologo /p:Configuration=Debug /p:platform=x64 mainwindow.vcxproj
           msbuild /nologo /p:Configuration=Release /p:platform=x64 mainwindow.vcxproj
 
+      - name: Build test1
+        if: runner.os != 'Windows'
+        run: |
+          cd test1
+          qmake
+          make
 
 
 # # This is a basic workflow to help you get started with Actions
