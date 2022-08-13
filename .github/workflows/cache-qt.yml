@@ -217,14 +217,14 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ runner.workspace }}/qt5-vtk-${{ env.VTK_VER }}
-          key: ${{ matrix.config.os }}-qt5-vtk-Debug-${{ hashFiles('misc/CMakePresets.json') }}
+          key: windows-2019-qt5-vtk-Debug-${{ hashFiles('misc/CMakePresets.json') }}
 
       - name: Cache qt5-vtk release
         id: cache-qt5-vtk-release
         uses: actions/cache@v2
         with:
           path: ${{ runner.workspace }}/qt5-vtk-${{ env.VTK_VER }}
-          key: ${{ matrix.config.os }}-qt5-vtk-Release-${{ hashFiles('misc/CMakePresets.json') }}
+          key: windows-2019-qt5-vtk-Release-${{ hashFiles('misc/CMakePresets.json') }}
 
       - name: Verify
         run: |
