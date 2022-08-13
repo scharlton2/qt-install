@@ -207,7 +207,7 @@ jobs:
 
   cache-windows:
     runs-on: windows-2019
-    needs: [cache-qt5-vtk-windows-2019-debug, cache-qt5-vtk-windows-2019-release]
+    needs: [build]
 
     steps:
       - uses: actions/checkout@v2
