@@ -19,7 +19,7 @@
           "VTK_MODULE_ENABLE_VTK_RenderingQt": "YES",
           "VTK_MODULE_ENABLE_VTK_ViewsQt": "YES",
           "VTK_MODULE_ENABLE_VTK_GUISupportQt": "YES",
-          "VTK_MODULE_ENABLE_VTK_GUISupportQtQuick": "YES",
+          "VTK_MODULE_ENABLE_VTK_GUISupportQtQuick": "DONT_WANT",
           "VTK_MODULE_ENABLE_VTK_GUISupportQtSQL":"YES"
         },
         "generator": "Ninja Multi-Config",

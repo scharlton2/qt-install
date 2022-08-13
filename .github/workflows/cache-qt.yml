@@ -26,23 +26,48 @@ jobs:
       matrix:
         config:
         - {
-            name: "install-qt-macos-11",
+            name: "cache-qt5-vtk-macos-11-debug",
             os: macos-11,
+            cmake_config: Debug,
             aqt_host: mac,
             aqt_arch: clang_64
           }
         - {
-            name: "install-qt-ubuntu-20.04",
+            name: "cache-qt5-vtk-ubuntu-20.04-debug",
             os: ubuntu-20.04,
+            cmake_config: Debug,
             aqt_host: linux,
             aqt_arch: gcc_64
           }
         - {
-            name: "install-qt-windows-2019",
+            name: "cache-qt5-vtk-windows-2019-debug",
             os: windows-2019,
+            cmake_config: Debug,
             aqt_host: windows,
             aqt_arch: win64_msvc2019_64
           }
+        - {
+            name: "cache-qt5-vtk-macos-11-release",
+            os: macos-11,
+            cmake_config: Release,
+            aqt_host: mac,
+            aqt_arch: clang_64
+          }
+        - {
+            name: "cache-qt5-vtk-ubuntu-20.04-release",
+            os: ubuntu-20.04,
+            cmake_config: Release,
+            aqt_host: linux,
+            aqt_arch: gcc_64
+          }
+        - {
+            name: "cache-qt5-vtk-windows-2019-release",
+            os: windows-2019,
+            cmake_config: Release,
+            aqt_host: windows,
+            aqt_arch: win64_msvc2019_64
+          }
+
 
     steps:
       - uses: actions/checkout@v3
@@ -145,9 +170,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ runner.workspace }}/qt5-vtk-${{ env.VTK_VER }}
-          key: ${{ matrix.config.os }}-qt5-vtk-${{ hashFiles('misc/CMakePresets.json') }}
+          key: ${{ matrix.config.os }}-qt5-vtk-${{ matrix.config.cmake_config }}-${{ hashFiles('misc/CMakePresets.json') }}
 
-      - name: Download and build VTK
+      - name: Build qt5-vtk
         if: steps.cache-qt5-vtk.outputs.cache-hit != 'true'
         run: |
           cd ${{ runner.workspace }}
@@ -156,7 +181,5 @@ jobs:
           cp ./qt-install/misc/CMakePresets.json ./VTK-${{ env.VTK_VER }}/.
           cd ./VTK-${{ env.VTK_VER }}/.
           cmake --preset ${{ matrix.config.aqt_arch }}
-          cmake --build --preset ${{ matrix.config.aqt_arch }} --config Debug
-          cmake --build --preset ${{ matrix.config.aqt_arch }} --config Release
-          cmake --install ${{ runner.workspace }}/qt5-vtk-${{ env.VTK_VER }}-build --config Debug
-          cmake --install ${{ runner.workspace }}/qt5-vtk-${{ env.VTK_VER }}-build --config Release
+          cmake --build --preset ${{ matrix.config.aqt_arch }} --config ${{ matrix.config.cmake_config }}
+          cmake --install ${{ runner.workspace }}/qt5-vtk-${{ env.VTK_VER }}-build --config ${{ matrix.config.cmake_config }}
