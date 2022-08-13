@@ -183,3 +183,49 @@ jobs:
           cmake --preset ${{ matrix.config.aqt_arch }}
           cmake --build --preset ${{ matrix.config.aqt_arch }} --config ${{ matrix.config.cmake_config }}
           cmake --install ${{ runner.workspace }}/qt5-vtk-${{ env.VTK_VER }}-build --config ${{ matrix.config.cmake_config }}
+
+  # merge:
+  #   name: ${{ matrix.config.name }}
+  #   runs-on: ${{ matrix.config.os }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       config:
+  #       - {
+  #           name: "cache-qt5-vtk-macos-11",
+  #           os: macos-11,
+  #         }
+  #       - {
+  #           name: "cache-qt5-vtk-ubuntu-20.04",
+  #           os: ubuntu-20.04,
+  #         }
+  #       - {
+  #           name: "cache-qt5-vtk-windows-2019",
+  #           os: windows-2019,
+  #           cmake_config: Debug,
+  #         }
+
+  cache-windows:
+    runs-on: windows-2019
+    needs: [cache-qt5-vtk-windows-2019-debug, cache-qt5-vtk-windows-2019-release]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache qt5-vtk debug
+        id: cache-qt5-vtk-debug
+        uses: actions/cache@v2
+        with:
+          path: ${{ runner.workspace }}/qt5-vtk-${{ env.VTK_VER }}
+          key: ${{ matrix.config.os }}-qt5-vtk-Debug-${{ hashFiles('misc/CMakePresets.json') }}
+
+      - name: Cache qt5-vtk release
+        id: cache-qt5-vtk-release
+        uses: actions/cache@v2
+        with:
+          path: ${{ runner.workspace }}/qt5-vtk-${{ env.VTK_VER }}
+          key: ${{ matrix.config.os }}-qt5-vtk-Release-${{ hashFiles('misc/CMakePresets.json') }}
+
+      - name: Verify
+        run: |
+          Get-ChildItem -Recurse ${{ runner.workspace }}/qt5-vtk-${{ env.VTK_VER }}
