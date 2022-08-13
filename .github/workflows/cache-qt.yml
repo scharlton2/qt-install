@@ -106,23 +106,53 @@ jobs:
             endif()
           endif()
 
-      - name: Cache qt5-vtk
-        id: cache-qt5-vtk
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.RUNNER_WORKSPACE }}/qt5-vtk-${{ env.VTK_VER }}
-          key: ${{ matrix.config.os }}-qt5-vtk-${{ hashFiles('misc/CMakePresets.json') }}
-
-      - name: Download and build VTK
-        if: steps.cache-qt5-vtk.outputs.cache-hit != 'true'
+      - name: Print env
+        if: runner.os == 'Windows'
         run: |
-          cd ${{ env.RUNNER_WORKSPACE }}
-          curl -L -O https://github.com/Kitware/VTK/archive/refs/tags/v${{ env.VTK_VER }}.tar.gz
-          tar xzf ./v${{ env.VTK_VER }}.tar.gz
-          cp ./qt-install/misc/CMakePresets.json ./VTK-${{ env.VTK_VER }}/.
-          cd ./VTK-${{ env.VTK_VER }}/.
-          cmake --preset ${{ matrix.config.aqt_arch }}
-          cmake --build --preset ${{ matrix.config.aqt_arch }} --config Debug
-          cmake --build --preset ${{ matrix.config.aqt_arch }} --config Release
-          cmake --install ${{ env.RUNNER_WORKSPACE }}/qt5-vtk-${{ env.VTK_VER }}-build --config Debug
-          cmake --install ${{ env.RUNNER_WORKSPACE }}/qt5-vtk-${{ env.VTK_VER }}-build --config Release
+          dir env:
+          echo ################################
+          echo $env:RUNNER_WORKSPACE
+          echo ${{ env.RUNNER_WORKSPACE }}
+          echo ${env:RUNNER_WORKSPACE}
+          echo ################################
+          echo $env:VTK_VER
+          echo ${{ env.VTK_VER }}
+          echo ${env:VTK_VER}
+          echo ################################
+          echo ${{ runner.workspace }}
+
+      - name: Print env
+        if: runner.os != 'Windows'
+        run: |
+          printenv
+          echo ################################
+          echo $RUNNER_WORKSPACE
+          echo ${{ env.RUNNER_WORKSPACE }}
+          echo ${RUNNER_WORKSPACE}
+          echo ################################
+          echo $VTK_VER
+          echo ${{ env.VTK_VER }}
+          echo ${VTK_VER}
+          echo ################################
+          echo ${{ runner.workspace }}
+
+      # - name: Cache qt5-vtk
+      #   id: cache-qt5-vtk
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ${{ env.RUNNER_WORKSPACE }}/qt5-vtk-${{ env.VTK_VER }}
+      #     key: ${{ matrix.config.os }}-qt5-vtk-${{ hashFiles('misc/CMakePresets.json') }}
+
+      # - name: Download and build VTK
+      #   if: steps.cache-qt5-vtk.outputs.cache-hit != 'true'
+      #   run: |
+      #     cd ${{ env.RUNNER_WORKSPACE }}
+      #     curl -L -O https://github.com/Kitware/VTK/archive/refs/tags/v${{ env.VTK_VER }}.tar.gz
+      #     tar xzf ./v${{ env.VTK_VER }}.tar.gz
+      #     cp ./qt-install/misc/CMakePresets.json ./VTK-${{ env.VTK_VER }}/.
+      #     cd ./VTK-${{ env.VTK_VER }}/.
+      #     cmake --preset ${{ matrix.config.aqt_arch }}
+      #     cmake --build --preset ${{ matrix.config.aqt_arch }} --config Debug
+      #     cmake --build --preset ${{ matrix.config.aqt_arch }} --config Release
+      #     cmake --install ${{ env.RUNNER_WORKSPACE }}/qt5-vtk-${{ env.VTK_VER }}-build --config Debug
+      #     cmake --install ${{ env.RUNNER_WORKSPACE }}/qt5-vtk-${{ env.VTK_VER }}-build --config Release
