@@ -68,12 +68,11 @@ jobs:
             aqt_arch: win64_msvc2019_64
           }
 
-
     steps:
       - uses: actions/checkout@v3
 
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3 
+        uses: jurplel/install-qt-action@v3
         with:
           version: ${{ env.AQT_VER }}
           host: ${{ matrix.config.aqt_host }}
@@ -135,36 +134,6 @@ jobs:
             endif()
           endif()
 
-      # - name: Print env
-      #   if: runner.os == 'Windows'
-      #   run: |
-      #     dir env:
-      #     echo '################################'
-      #     echo $env:RUNNER_WORKSPACE
-      #     echo ${{ env.RUNNER_WORKSPACE }}
-      #     echo ${env:RUNNER_WORKSPACE}
-      #     echo '################################'
-      #     echo $env:VTK_VER
-      #     echo ${{ env.VTK_VER }}
-      #     echo ${env:VTK_VER}
-      #     echo '################################'
-      #     echo ${{ runner.workspace }}
-
-      # - name: Print env
-      #   if: runner.os != 'Windows'
-      #   run: |
-      #     printenv
-      #     echo '################################'
-      #     echo $RUNNER_WORKSPACE
-      #     echo ${{ env.RUNNER_WORKSPACE }}
-      #     echo ${RUNNER_WORKSPACE}
-      #     echo '################################'
-      #     echo $VTK_VER
-      #     echo ${{ env.VTK_VER }}
-      #     echo ${VTK_VER}
-      #     echo '################################'
-      #     echo ${{ runner.workspace }}
-
       - name: Cache qt5-vtk
         id: cache-qt5-vtk
         uses: actions/cache@v2
@@ -184,48 +153,110 @@ jobs:
           cmake --build --preset ${{ matrix.config.aqt_arch }} --config ${{ matrix.config.cmake_config }}
           cmake --install ${{ runner.workspace }}/qt5-vtk-${{ env.VTK_VER }}-build --config ${{ matrix.config.cmake_config }}
 
-  # merge:
-  #   name: ${{ matrix.config.name }}
-  #   runs-on: ${{ matrix.config.os }}
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       config:
-  #       - {
-  #           name: "merge-qt5-vtk-macos-11",
-  #           os: macos-11,
-  #         }
-  #       - {
-  #           name: "cache-qt5-vtk-ubuntu-20.04",
-  #           os: ubuntu-20.04,
-  #         }
-  #       - {
-  #           name: "cache-qt5-vtk-windows-2019",
-  #           os: windows-2019,
-  #           cmake_config: Debug,
-  #         }
 
-  cache-windows:
-    runs-on: windows-2019
+  merge:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
     needs: [build]
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "qt5-vtk-macos-11",
+            os: macos-11,
+            aqt_host: mac,
+            aqt_arch: clang_64
+          }
+        - {
+            name: "qt5-vtk-ubuntu-20.04",
+            os: ubuntu-20.04,
+            aqt_host: linux,
+            aqt_arch: gcc_64
+          }
+        - {
+            name: "qt5-vtk-windows-2019",
+            os: windows-2019,
+            aqt_host: windows,
+            aqt_arch: win64_msvc2019_64
+          }
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: ${{ env.AQT_VER }}
+          host: ${{ matrix.config.aqt_host }}
+          target: ${{ env.AQT_TARGET }}
+          arch: ${{ matrix.config.aqt_arch }}
+          dir: ${{ runner.workspace }}
+          cache: true
+          cache-key-prefix: install-qt-action
+          tools: tools_ninja
+
+      - name: Add ninja path
+        shell: bash
+        run: |
+          echo "${IQTA_TOOLS}/Ninja" >> $GITHUB_PATH
 
       - name: Cache qt5-vtk debug
         id: cache-qt5-vtk-debug
         uses: actions/cache@v2
         with:
           path: ${{ runner.workspace }}/qt5-vtk-${{ env.VTK_VER }}
-          key: windows-2019-qt5-vtk-Debug-${{ hashFiles('misc/CMakePresets.json') }}
+          key: ${{ matrix.config.os }}-qt5-vtk-Debug-${{ hashFiles('misc/CMakePresets.json') }}
 
       - name: Cache qt5-vtk release
         id: cache-qt5-vtk-release
         uses: actions/cache@v2
         with:
           path: ${{ runner.workspace }}/qt5-vtk-${{ env.VTK_VER }}
-          key: windows-2019-qt5-vtk-Release-${{ hashFiles('misc/CMakePresets.json') }}
+          key: ${{ matrix.config.os }}-qt5-vtk-Release-${{ hashFiles('misc/CMakePresets.json') }}
 
-      - name: Verify
+      - name: Set up Visual Studio shell
+        if: runner.os == 'Windows'
+        uses: egor-tensin/vs-shell@v2
+        with:
+          arch: x64
+
+      - name: Build test2 with cmake
         run: |
-          Get-ChildItem -Recurse ${{ runner.workspace }}
+          cd test2
+          mkdir _ninja
+          cd _ninja
+          cmake -G "Ninja Multi-Config" ..
+          cmake --build . --config Debug
+          cmake --build . --config Release
+
+      - name: Check dependencies
+        shell: cmake -P {0}
+        run: |
+          if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
+            execute_process(
+              COMMAND         ldd ./test2/_ninja/Release/mainwindow
+              RESULT_VARIABLE result
+            )
+            if (NOT result EQUAL 0)
+              message(FATAL_ERROR "ldd failed")
+            endif()
+          endif()
+          if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Darwin")
+            execute_process(
+              COMMAND         otool -L ./test2/_ninja/Release/mainwindow
+              RESULT_VARIABLE result
+            )
+            if (NOT result EQUAL 0)
+              message(FATAL_ERROR "otool failed")
+            endif()
+          endif()
+          if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
+            execute_process(
+              COMMAND         dumpbin /imports ./test2/_ninja/Release/mainwindow.exe
+              RESULT_VARIABLE result
+            )
+            if (NOT result EQUAL 0)
+              message(FATAL_ERROR "dumpbin failed")
+            endif()
+          endif()
