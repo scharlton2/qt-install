@@ -13,7 +13,7 @@
         "cacheVariables": {
           "BUILD_TESTING": "OFF",
           "CMAKE_DEBUG_POSTFIX": "d",
-          "CMAKE_INSTALL_PREFIX": "$env{RUNNER_WORKSPACE}/qt5-vtk-$env{VTK_VER}-build",
+          "CMAKE_INSTALL_PREFIX": "$env{RUNNER_WORKSPACE}/qt5-vtk-$env{VTK_VER}",
           "VTK_GROUP_ENABLE_Qt" : "YES",
           "VTK_QT_VERSION": "5",
           "VTK_MODULE_ENABLE_VTK_RenderingQt": "YES",
