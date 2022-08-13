@@ -192,7 +192,7 @@ jobs:
   #     matrix:
   #       config:
   #       - {
-  #           name: "cache-qt5-vtk-macos-11",
+  #           name: "merge-qt5-vtk-macos-11",
   #           os: macos-11,
   #         }
   #       - {
@@ -228,4 +228,4 @@ jobs:
 
       - name: Verify
         run: |
-          Get-ChildItem -Recurse ${{ runner.workspace }}/qt5-vtk-${{ env.VTK_VER }}
+          Get-ChildItem -Recurse ${{ runner.workspace }}
