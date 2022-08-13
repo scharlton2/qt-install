@@ -35,7 +35,6 @@ jobs:
           }
         - {
             name: "install-qt-windows-2019",
-            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
             os: windows-2019,
             aqt_host: windows,
             aqt_arch: win64_msvc2019_64
@@ -61,65 +60,11 @@ jobs:
         run: |
           echo "${IQTA_TOOLS}/Ninja" >> $GITHUB_PATH
 
-      - name: Check qmake
-        shell: bash
-        run: |
-          which qmake
-          qmake --version
-
-      - name: Check ninja
-        shell: bash
-        run: |
-          which ninja
-          ninja --version
-
-      - name: Check cmake
-        shell: bash
-        run: |
-          which cmake
-          cmake --version
-          cmake --help
-
-
-
-      - name: cl.exe shouldn't be found
-        if: runner.os == 'Windows'
-        run: |
-          $(Get-Command cl -ErrorAction SilentlyContinue) -and $(throw "cl.exe was found!")
-
       - name: Set up Visual Studio shell
         if: runner.os == 'Windows'
         uses: egor-tensin/vs-shell@v2
         with:
           arch: x64
-
-      - name: cl.exe should be found now
-        if: runner.os == 'Windows'
-        run: |
-          $(Get-Command cl -ErrorAction SilentlyContinue) -or $(throw "cl.exe wasn't found!")
-          echo _MSC_VER > test.c
-          cl /nologo /EP test.c
-
-      - name: MSBuild.exe should be found now
-        if: runner.os == 'Windows'
-        run: |
-          $(Get-Command MSBuild -ErrorAction SilentlyContinue) -or $(throw "MSBuild wasn't found!")
-          MSBuild --version
-
-      - name: Build test1 with vs2019
-        if: runner.os == 'Windows'
-        run: |
-          Set-Location .\test1\
-          qmake -tp vc
-          msbuild /nologo /p:Configuration=Debug /p:platform=x64 mainwindow.vcxproj
-          msbuild /nologo /p:Configuration=Release /p:platform=x64 mainwindow.vcxproj
-
-      - name: Build test1
-        if: runner.os != 'Windows'
-        run: |
-          cd test1
-          qmake
-          make
 
       - name: Build test2 with cmake
         run: |
@@ -161,187 +106,23 @@ jobs:
             endif()
           endif()
 
+      - name: Cache qt5-vtk
+        id: cache-qt5-vtk
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.RUNNER_WORKSPACE }}/qt5-vtk-${{ env.VTK_VER }}
+          key: ${{ matrix.config.os }}-qt5-vtk-${{ hashFiles('misc/CMakePresets.json') }}
 
-# # This is a basic workflow to help you get started with Actions
-
-# name: install-qt
-
-# # Controls when the workflow will run
-# on:
-#   # Triggers the workflow on push or pull request events but only for the "main" branch
-#   push:
-#     branches: [ "main" ]
-#   pull_request:
-#     branches: [ "main" ]
-
-#   # Allows you to run this workflow manually from the Actions tab
-#   workflow_dispatch:
-
-# env:
-#   QT_VER: 5.15.2
-#   QT_TARGET: desktop
-
-# # A workflow run is made up of one or more jobs that can run sequentially or in parallel
-# jobs:
-
-#   install-qt-macos:
-  
-#     runs-on: macos-11
-
-#     env:
-#       QT_ARCH: clang_64
-#       QT_HOST: mac
-
-#     steps:
-#       - name: Install Qt
-#         uses: jurplel/install-qt-action@v3 
-#         with:
-#           version: ${{ env.QT_VER }}
-#           host: ${{ env.QT_HOST }}
-#           target: ${{ env.QT_TARGET }}
-#           arch: ${{ env.QT_ARCH }}
-#           dir: ${{ env.RUNNER_WORKSPACE }}
-#           cache: true
-#           cache-key-prefix: install-qt-action
-#           tools: tools_ninja
-
-#       - name: Add path
-#         shell: bash
-#         run: |
-#           echo "${IQTA_TOOLS}/Ninja" >> $GITHUB_PATH
-
-#       - name: Check qmake
-#         shell: bash
-#         run: |
-#           which qmake
-#           qmake --version
-
-#       - name: Check cmake
-#         shell: bash
-#         run: |
-#           which cmake
-#           cmake --version
-#           cmake --help
-
-#       - name: Check path
-#         shell: bash
-#         run: |
-#           echo $PATH
-
-#       - name: Check ninja
-#         shell: bash
-#         run: |
-#           which ninja
-#           ninja --version
-
-#       - name: List files
-#         shell: bash
-#         run: ls -lR ${RUNNER_WORKSPACE}
-        
-#   install-qt-ubuntu:
-  
-#     runs-on: ubuntu-20.04
-
-#     env:
-#       QT_ARCH: gcc_64
-#       QT_HOST: linux
-
-#     steps:
-#       - name: Install Qt
-#         uses: jurplel/install-qt-action@v3 
-#         with:
-#           version: ${{ env.QT_VER }}
-#           host: ${{ env.QT_HOST }}
-#           target: ${{ env.QT_TARGET }}
-#           arch: ${{ env.QT_ARCH }}
-#           dir: ${{ env.RUNNER_WORKSPACE }}
-#           cache: true
-#           cache-key-prefix: install-qt-action
-#           tools: tools_ninja
-
-#       - name: Add path
-#         shell: bash
-#         run: |
-#           echo "${IQTA_TOOLS}/Ninja" >> $GITHUB_PATH
-
-#       - name: Check qmake
-#         shell: bash
-#         run: |
-#           which qmake
-#           qmake --version
-
-#       - name: Check cmake
-#         shell: bash
-#         run: |
-#           which cmake
-#           cmake --version
-#           cmake --help
-
-#       - name: Check path
-#         shell: bash
-#         run: |
-#           echo $PATH
-
-#       - name: Check ninja
-#         shell: bash
-#         run: |
-#           which ninja
-#           ninja --version
-
-#       - name: List files
-#         shell: bash
-#         run: ls -lR ${RUNNER_WORKSPACE}
-
-#   install-qt-windows:
-    
-#     runs-on: windows-2019
-
-#     env:
-#       QT_ARCH: win64_msvc2019_64
-#       QT_HOST: windows
-
-#     steps:
-#       - name: Install Qt
-#         uses: jurplel/install-qt-action@v3 
-#         with:
-#           version: ${{ env.QT_VER }}
-#           host: ${{ env.QT_HOST }}
-#           target: ${{ env.QT_TARGET }}
-#           arch: ${{ env.QT_ARCH }}
-#           dir: ${{ env.RUNNER_WORKSPACE }}
-#           cache: true
-#           cache-key-prefix: install-qt-action
-#           tools: tools_ninja
-
-#       - name: Add path
-#         shell: bash
-#         run: |
-#           echo "${IQTA_TOOLS}/Ninja" >> $GITHUB_PATH
-
-#       - name: Check qmake
-#         shell: bash
-#         run: |
-#           which qmake
-#           qmake --version
-
-#       - name: Check cmake
-#         shell: bash
-#         run: |
-#           which cmake
-#           cmake --version
-#           cmake --help
-
-#       - name: Check path
-#         shell: bash
-#         run: |
-#           echo $PATH
-
-#       - name: Check ninja
-#         shell: bash
-#         run: |
-#           which ninja
-#           ninja --version
-
-#       - name: List files
-#         shell: bash
-#         run: ls -lR ${RUNNER_WORKSPACE}
+      - name: Download and build VTK
+        if: steps.cache-qt5-vtk.outputs.cache-hit != 'true'
+        run: |
+          cd ${{ env.RUNNER_WORKSPACE }}
+          curl -L -O https://github.com/Kitware/VTK/archive/refs/tags/v${{ env.VTK_VER }}.tar.gz
+          tar xzf ./v${{ env.VTK_VER }}.tar.gz
+          cp ./qt-install/misc/CMakePresets.json ./VTK-${{ env.VTK_VER }}/.
+          cd ./VTK-${{ env.VTK_VER }}/.
+          cmake --preset ${{ matrix.config.aqt_arch }}
+          cmake --build --preset ${{ matrix.config.aqt_arch }} --config Debug
+          cmake --build --preset ${{ matrix.config.aqt_arch }} --config Release
+          cmake --install ${{ env.RUNNER_WORKSPACE }}/qt5-vtk-${{ env.VTK_VER }}-build --config Debug
+          cmake --install ${{ env.RUNNER_WORKSPACE }}/qt5-vtk-${{ env.VTK_VER }}-build --config Release

@@ -9,9 +9,11 @@
       {
         "name": "default",
         "hidden": true,
+        "binaryDir": "$env{RUNNER_WORKSPACE}/qt5-vtk-$env{VTK_VER}-build",
         "cacheVariables": {
           "BUILD_TESTING": "OFF",
           "CMAKE_DEBUG_POSTFIX": "d",
+          "CMAKE_INSTALL_PREFIX": "$env{RUNNER_WORKSPACE}/qt5-vtk-$env{VTK_VER}-build",
           "VTK_GROUP_ENABLE_Qt" : "YES",
           "VTK_QT_VERSION": "5",
           "VTK_MODULE_ENABLE_VTK_RenderingQt": "YES",
@@ -22,21 +24,13 @@
         },
         "generator": "Ninja Multi-Config",
         "environment": {
-          // "PATH": "$env{RUNNER_WORKSPACE}/Qt/Tools/Ninja:$penv{PATH}",
-          "Qt5_VERSION": "5.15.2",
-          "Qt5_DIR": "$env{RUNNER_WORKSPACE}/Qt/$env{Qt5_VERSION}/${presetName}/lib/cmake/Qt5",
-          "VTK_VERSION": "9.1.0",
-          "VTK_INSTALL_PREFIX": "$env{RUNNER_WORKSPACE}"
+          "Qt5_DIR": "$env{RUNNER_WORKSPACE}/Qt/$env{AQT_VER}/${presetName}/lib/cmake/Qt5"
         }
       },
       {
-        "name": "msvc2019_64",
+        "name": "win64_msvc2019_64",
         "inherits": "default",
         "displayName": "vtk-9.1.0 with VTK_MODULE_ENABLE_VTK_GUISupportQt=YES using msvc2019_64",
-        "binaryDir": "$env{VTK_INSTALL_PREFIX}/qt5-vtk-$env{VTK_VERSION}-msvc2019_64-build",
-        "cacheVariables": {
-          "CMAKE_INSTALL_PREFIX": "$env{VTK_INSTALL_PREFIX}/qt5-vtk-$env{VTK_VERSION}-${presetName}"
-        },
         "condition": {
           "type": "equals",
           "lhs": "${hostSystemName}",
@@ -49,8 +43,8 @@
             "Configure": "cmake --preset ${presetName}",
             "Build-debug": "cmake --build --preset ${presetName} --config Debug",
             "Build-release": "cmake --build --preset ${presetName} --config Release",
-            "Install-debug": "cmake --install ${CMAKE_INSTALL_PREFIX} --config Debug",
-            "Install-release": "cmake --install ${CMAKE_INSTALL_PREFIX} --config Release"
+            "Install-debug": "cmake --install ${binaryDir} --config Debug",
+            "Install-release": "cmake --install ${binaryDir} --config Release"
           }
         }
       },
@@ -58,10 +52,6 @@
         "name": "gcc_64",
         "inherits": "default",
         "displayName": "vtk-9.1.0 with VTK_MODULE_ENABLE_VTK_GUISupportQt=YES using gcc_64",
-        "binaryDir": "$env{VTK_INSTALL_PREFIX}/qt5-vtk-$env{VTK_VERSION}-gcc_64-build",
-        "cacheVariables": {
-          "CMAKE_INSTALL_PREFIX": "$env{VTK_INSTALL_PREFIX}/qt5-vtk-$env{VTK_VERSION}-${presetName}"
-        },
         "condition": {
           "type": "equals",
           "lhs": "${hostSystemName}",
@@ -74,8 +64,8 @@
             "Configure": "cmake --preset ${presetName}",
             "Build-debug": "cmake --build --preset ${presetName} --config Debug",
             "Build-release": "cmake --build --preset ${presetName} --config Release",
-            "Install-debug": "cmake --install ${CMAKE_INSTALL_PREFIX} --config Debug",
-            "Install-release": "cmake --install ${CMAKE_INSTALL_PREFIX} --config Release"
+            "Install-debug": "cmake --install ${binaryDir} --config Debug",
+            "Install-release": "cmake --install ${binaryDir} --config Release"
           }
         }
       },
@@ -83,10 +73,6 @@
         "name": "clang_64",
         "inherits": "default",
         "displayName": "vtk-9.1.0 with VTK_MODULE_ENABLE_VTK_GUISupportQt=YES using clang_64",
-        "binaryDir": "$env{VTK_INSTALL_PREFIX}/qt5-vtk-$env{VTK_VERSION}-clang_64-build",
-        "cacheVariables": {
-          "CMAKE_INSTALL_PREFIX": "$env{VTK_INSTALL_PREFIX}/qt5-vtk-$env{VTK_VERSION}-${presetName}"
-        },
         "condition": {
           "type": "equals",
           "lhs": "${hostSystemName}",
@@ -99,16 +85,16 @@
             "Configure": "cmake --preset ${presetName}",
             "Build-debug": "cmake --build --preset ${presetName} --config Debug",
             "Build-release": "cmake --build --preset ${presetName} --config Release",
-            "Install-debug": "cmake --install ${CMAKE_INSTALL_PREFIX} --config Debug",
-            "Install-release": "cmake --install ${CMAKE_INSTALL_PREFIX} --config Release"
+            "Install-debug": "cmake --install ${binaryDir} --config Debug",
+            "Install-release": "cmake --install ${binaryDir} --config Release"
           }
         }
       }
     ],
     "buildPresets": [
       {
-        "name": "msvc2019_64",
-        "configurePreset": "msvc2019_64"
+        "name": "win64_msvc2019_64",
+        "configurePreset": "win64_msvc2019_64"
       },
       {
         "name": "gcc_64",
