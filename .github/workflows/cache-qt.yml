@@ -110,30 +110,30 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           dir env:
-          echo ################################
+          echo '################################'
           echo $env:RUNNER_WORKSPACE
           echo ${{ env.RUNNER_WORKSPACE }}
           echo ${env:RUNNER_WORKSPACE}
-          echo ################################
+          echo '################################'
           echo $env:VTK_VER
           echo ${{ env.VTK_VER }}
           echo ${env:VTK_VER}
-          echo ################################
+          echo '################################'
           echo ${{ runner.workspace }}
 
       - name: Print env
         if: runner.os != 'Windows'
         run: |
           printenv
-          echo ################################
+          echo '################################'
           echo $RUNNER_WORKSPACE
           echo ${{ env.RUNNER_WORKSPACE }}
           echo ${RUNNER_WORKSPACE}
-          echo ################################
+          echo '################################'
           echo $VTK_VER
           echo ${{ env.VTK_VER }}
           echo ${VTK_VER}
-          echo ################################
+          echo '################################'
           echo ${{ runner.workspace }}
 
       # - name: Cache qt5-vtk
