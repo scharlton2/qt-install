@@ -184,6 +184,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      #
+      # Open 'PowerShell 7 for VS 2019 x64' in Windows Terminal
+      # @TODO aqt install command here (python)
+      # $env:Qt5_Dir="D:\a\qt-install\Qt\5.15.2\msvc2019_64"
+      #
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
@@ -260,3 +265,21 @@ jobs:
               message(FATAL_ERROR "dumpbin failed")
             endif()
           endif()
+
+      - name: install
+        if: runner.os == 'Windows'
+        run: |
+          cd test2/_ninja
+          cmake --install . --config Release
+          ls ./INSTALL/bin
+          windeployqt ./INSTALL/bin
+          ls ./INSTALL/bin
+
+      - name: install
+        if: runner.os == 'macOS'
+        run: |
+          cd test2/_ninja
+          cmake --install . --config Release
+          ls ./INSTALL/bin
+          macdeployqt ./INSTALL/bin
+          ls ./INSTALL/bin

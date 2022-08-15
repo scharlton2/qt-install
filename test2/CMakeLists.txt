@@ -1,9 +1,12 @@
 cmake_minimum_required(VERSION 3.20)
 
-project (
+project(
   mainwindow
   LANGUAGES CXX
 )
+
+# set standard directory locations
+include(GNUInstallDirs)
 
 # Automatically add the current source and build directories to the include path.
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -26,3 +29,15 @@ target_link_libraries(mainwindow PUBLIC
   Qt5::Gui
   Qt5::Widgets
 )
+
+# hard-code install path temporarily
+set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/INSTALL")
+
+install(TARGETS mainwindow
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  BUNDLE DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  LIBRARY DESTINATION "${CMAKE_INSTALL_BINDIR}"
+)
+
+# install VS runtimes
+include(InstallRequiredSystemLibraries)
