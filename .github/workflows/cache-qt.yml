@@ -237,12 +237,12 @@ jobs:
 
       - name: Build test3 with cmake
         run: |
-          cd test3
-          mkdir _ninja
-          cd _ninja
-          cmake -G "Ninja Multi-Config" ..
-          cmake --build . --config Debug
-          cmake --build . --config Release
+          cd test3                          || exit
+          mkdir _ninja                      || exit
+          cd _ninja                         || exit
+          cmake -G "Ninja Multi-Config" ..  || exit
+          cmake --build . --config Debug    || exit
+          cmake --build . --config Release  || exit
 
       - name: Check test2 dependencies
         shell: cmake -P {0}
@@ -262,7 +262,14 @@ jobs:
               RESULT_VARIABLE result
             )
             if (NOT result EQUAL 0)
-              message(FATAL_ERROR "otool failed")
+              message(FATAL_ERROR "otool -L failed")
+            endif()
+            execute_process(
+              COMMAND         otool -l ./test2/_ninja/Release/mainwindow
+              RESULT_VARIABLE result
+            )
+            if (NOT result EQUAL 0)
+              message(FATAL_ERROR "otool -l failed")
             endif()
           endif()
           if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
