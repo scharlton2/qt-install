@@ -237,12 +237,12 @@ jobs:
 
       - name: Build test3 with cmake
         run: |
-          cd test3                          || exit
-          mkdir _ninja                      || exit
-          cd _ninja                         || exit
-          cmake -G "Ninja Multi-Config" ..  || exit
-          cmake --build . --config Debug    || exit
-          cmake --build . --config Release  || exit
+          cd test3                          &&
+          mkdir _ninja                      &&
+          cd _ninja                         &&
+          cmake -G "Ninja Multi-Config" ..  &&
+          cmake --build . --config Debug    &&
+          cmake --build . --config Release
 
       - name: Check test2 dependencies
         shell: cmake -P {0}
