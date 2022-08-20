@@ -77,6 +77,7 @@ SimpleView::SimpleView()
 SimpleView::~SimpleView()
 {
   // The smart pointers should clean up for up
+  delete this->ui;
 }
 
 // Action to be taken upon file open
