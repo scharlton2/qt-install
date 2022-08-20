@@ -42,7 +42,7 @@ source_group("Resources" FILES
   ${UIs}
   ${QRCs})
 
-add_executable(SimpleView MACOSX_BUNDLE
+add_executable(SimpleView WIN32 MACOSX_BUNDLE
   ${Srcs} ${Hdrs} ${UIs} ${QRCs})
 target_link_libraries(SimpleView
   PRIVATE

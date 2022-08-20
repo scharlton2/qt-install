@@ -14,7 +14,7 @@ set(CMAKE_AUTOUIC ON)    # Whether to handle uic automatically for Qt targets.
 
 find_package(Qt5 COMPONENTS Core Gui Widgets)
 
-add_executable(mainwindow
+add_executable(mainwindow WIN32
   colorswatch.cpp colorswatch.h
   main.cpp
   mainwindow.cpp mainwindow.h
