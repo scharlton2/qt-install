@@ -237,7 +237,7 @@ jobs:
 
       - name: Build test3 with cmake
         run: |
-          cd test2
+          cd test3
           mkdir _ninja
           cd _ninja
           cmake -G "Ninja Multi-Config" ..
