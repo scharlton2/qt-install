@@ -226,23 +226,23 @@ jobs:
         with:
           arch: x64
 
-      - name: Build test2 with cmake
-        run: |
-          cd test2
-          mkdir _ninja
-          cd _ninja
-          cmake -G "Ninja Multi-Config" ..
-          cmake --build . --config Debug
-          cmake --build . --config Release
+      - name: Configure test2 with cmake
+        run: cmake -S test2 -B test2/_ninja -G "Ninja Multi-Config"
 
-      - name: Build test3 with cmake
-        run: |
-          cd test3                          &&
-          mkdir _ninja                      &&
-          cd _ninja                         &&
-          cmake -G "Ninja Multi-Config" ..  &&
-          cmake --build . --config Debug    &&
-          cmake --build . --config Release
+      - name: Build test2 debug with cmake
+        run: cmake --build test2/_ninja --config Debug
+
+      - name: Build test2 release with cmake
+        run: cmake --build test2/_ninja --config Release
+
+      - name: Configure test3 with cmake
+        run: cmake -S test3 -B test3/_ninja -G "Ninja Multi-Config"
+
+      - name: Build test3 debug with cmake
+        run: cmake --build test3/_ninja --config Debug
+
+      - name: Build test3 release with cmake
+        run: cmake --build test3/_ninja --config Release
 
       - name: Check test2 dependencies
         shell: cmake -P {0}
