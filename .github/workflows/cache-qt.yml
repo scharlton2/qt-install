@@ -230,7 +230,16 @@ jobs:
           cmake --build . --config Debug
           cmake --build . --config Release
 
-      - name: Check dependencies
+      - name: Build test3 with cmake
+        run: |
+          cd test2
+          mkdir _ninja
+          cd _ninja
+          cmake -G "Ninja Multi-Config" ..
+          cmake --build . --config Debug
+          cmake --build . --config Release
+
+      - name: Check test2 dependencies
         shell: cmake -P {0}
         run: |
           if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
