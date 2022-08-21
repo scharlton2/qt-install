@@ -235,11 +235,9 @@ jobs:
       - name: Build test2 release with cmake
         run: cmake --build test2/_ninja --config Release
 
-      # - name: Test failure
-      #   if: runner.os != 'Windows'
-      #   run: false
-
       - name: Configure test3 with cmake
+        env:
+          VTK_DIR: ${{ runner.workspace }}/qt5-vtk-${{ env.VTK_VER }}/lib/cmake
         run: cmake -S test3 -B test3/_ninja -G "Ninja Multi-Config"
 
       - name: Build test3 debug with cmake

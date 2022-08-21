@@ -8,16 +8,16 @@ find_package(VTK REQUIRED
     InfovisCore
     RenderingFreeType
     ViewsQt)
-# if (NOT VTK_FOUND)
-#   message("Skipping example: ${VTK_NOT_FOUND_MESSAGE}")
-#   return ()
-# endif ()
+if (NOT VTK_FOUND)
+  message("Skipping example: ${VTK_NOT_FOUND_MESSAGE}")
+  return ()
+endif ()
 
 find_package(Qt5 REQUIRED COMPONENTS Widgets Gui)
-# if (NOT TARGET Qt5::Widgets OR NOT TARGET Qt5::Gui)
-#   message("Skipping example: ${Qt5_NOT_FOUND_MESSAGE}")
-#   return ()
-# endif ()
+if (NOT TARGET Qt5::Widgets OR NOT TARGET Qt5::Gui)
+  message("Skipping example: ${Qt5_NOT_FOUND_MESSAGE}")
+  return ()
+endif ()
 
 # Set your files and resources here
 set(Srcs
