@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8...3.12 FATAL_ERROR)
 project(SimpleView)
 
-find_package(VTK
+find_package(VTK REQUIRED
   COMPONENTS
     CommonCore
     GUISupportQt
@@ -13,7 +13,7 @@ find_package(VTK
 #   return ()
 # endif ()
 
-find_package(Qt5 COMPONENTS Widgets Gui)
+find_package(Qt5 REQUIRED COMPONENTS Widgets Gui)
 # if (NOT TARGET Qt5::Widgets OR NOT TARGET Qt5::Gui)
 #   message("Skipping example: ${Qt5_NOT_FOUND_MESSAGE}")
 #   return ()
