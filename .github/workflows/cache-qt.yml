@@ -251,7 +251,7 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          path: ./test3/_ninja/INSTALL/.
+          path: ${{ github.workspace }}/test3/_ninja/INSTALL
 
       - name: Check test2 dependencies
         shell: cmake -P {0}
