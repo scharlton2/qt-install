@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.8...3.12 FATAL_ERROR)
 project(SimpleView)
 
+# set standard directory locations
+include(GNUInstallDirs)
+
 find_package(VTK REQUIRED
   COMPONENTS
     CommonCore
@@ -49,3 +52,18 @@ target_link_libraries(SimpleView
     ${VTK_LIBRARIES}
     Qt5::Gui
     Qt5::Widgets)
+
+# install
+install(TARGETS SimpleView
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+# install vtk dlls
+foreach(_lib ${VTK_LIBRARIES})
+  install(FILES $<TARGET_FILE:${_lib}>
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+  )
+endforeach()
+
+# install runtimes
+include (InstallRequiredSystemLibraries)

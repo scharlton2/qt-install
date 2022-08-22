@@ -246,6 +246,13 @@ jobs:
       - name: Build test3 release with cmake
         run: cmake --build test3/_ninja --config Release
 
+      - name: Install test3 release with cmake
+        run: cmake --install test3/_ninja --prefix ./test3/_ninja/INSTALL/. --config Release
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: ./test3/_ninja/INSTALL/.
+
       - name: Check test2 dependencies
         shell: cmake -P {0}
         run: |
